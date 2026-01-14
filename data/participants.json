@@ -1,0 +1,34 @@
+{
+  "participants": [
+    {
+      "slug": "retro-computing",
+      "name": "Retro Computing Blog",
+      "url": "https://retrocomputing.example.com",
+      "description": "A blog about vintage computers and programming"
+    },
+    {
+      "slug": "pixel-art",
+      "name": "Pixel Art Gallery",
+      "url": "https://pixelart.example.com",
+      "description": "Showcasing beautiful pixel art creations"
+    },
+    {
+      "slug": "indie-web",
+      "name": "Indie Web Journal",
+      "url": "https://indieweb.example.com",
+      "description": "Thoughts on the independent web movement"
+    },
+    {
+      "slug": "digital-garden",
+      "name": "Digital Garden",
+      "url": "https://garden.example.com",
+      "description": "A personal knowledge base and notes collection"
+    },
+    {
+      "slug": "synth-music",
+      "name": "Synth Music Corner",
+      "url": "https://synthmusic.example.com",
+      "description": "Electronic and synthesizer music exploration"
+    }
+  ]
+}
