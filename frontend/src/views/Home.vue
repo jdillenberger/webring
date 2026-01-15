@@ -131,130 +131,150 @@ onMounted(fetchParticipants)
 </script>
 
 <template>
-  <div class="container">
+  <div class="page">
     <header>
+      <div class="header-icon">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="40" stroke="currentColor" stroke-width="4" stroke-dasharray="8 4" />
+          <circle cx="50" cy="10" r="8" fill="currentColor" />
+          <circle cx="85" cy="65" r="8" fill="currentColor" />
+          <circle cx="15" cy="65" r="8" fill="currentColor" />
+          <path d="M50 18 L77 61" stroke="currentColor" stroke-width="2" />
+          <path d="M77 61 L23 61" stroke="currentColor" stroke-width="2" />
+          <path d="M23 61 L50 18" stroke="currentColor" stroke-width="2" />
+        </svg>
+      </div>
       <h1>Webring</h1>
-      <p>{{ participants.length }} connected sites</p>
+      <p class="tagline">Discover the indie web, one site at a time</p>
+      <div class="header-stats">
+        <span class="stat">{{ participants.length }} sites connected</span>
+      </div>
     </header>
 
     <div v-if="loading" class="message">Loading...</div>
     <div v-else-if="error" class="message error">{{ error }}</div>
 
-    <template v-else>
-      <!-- Introduction -->
-      <section class="intro-section">
-        <h2>What is a Webring?</h2>
-        <p>
-          A webring is a collection of websites linked together in a circular structure.
-          Each member site contains navigation links to the previous and next sites in the ring,
-          allowing visitors to discover new websites by traversing the ring.
-        </p>
-        <p>
-          Webrings were popular in the early days of the internet as a way for like-minded
-          website owners to connect and share traffic. They represent a more personal,
-          community-driven approach to web discovery.
-        </p>
-      </section>
+    <div v-else class="two-column">
+      <!-- Left Column -->
+      <div class="column-left">
+        <!-- Introduction -->
+        <section class="intro-section">
+          <h2>What is a Webring?</h2>
+          <p>
+            A webring is a collection of websites linked together in a circular structure.
+            Each member site contains navigation links to the previous and next sites in the ring,
+            allowing visitors to discover new websites by traversing the ring.
+          </p>
+          <p>
+            Webrings were popular in the early days of the internet as a way for like-minded
+            website owners to connect and share traffic. They represent a more personal,
+            community-driven approach to web discovery.
+          </p>
+        </section>
 
-      <!-- Call to Action -->
-      <section class="cta-section">
-        <h2>Join the Webring</h2>
-        <p>Have a website? Become part of our community of connected sites.</p>
-        <router-link to="/apply" class="btn-primary">Apply Now</router-link>
-      </section>
+        <!-- Embed Code -->
+        <section class="embed-section">
+          <h2>Embed Code</h2>
+          <p class="embed-hint">Add this widget to your site to let visitors navigate the ring.</p>
 
-      <!-- Embed Code -->
-      <section class="embed-section">
-        <h2>Embed Code</h2>
-        <p class="embed-hint">Add this widget to your site to let visitors navigate the ring.</p>
-
-        <!-- Theme Selector -->
-        <div class="theme-selector">
-          <span class="theme-label">Style:</span>
-          <div class="theme-options">
-            <label
-              v-for="theme in themes"
-              :key="theme.id"
-              class="theme-option"
-              :class="{ active: selectedTheme === theme.id }"
-            >
-              <input
-                type="radio"
-                :value="theme.id"
-                v-model="selectedTheme"
-                class="sr-only"
-              />
-              {{ theme.name }}
-            </label>
+          <!-- Theme Selector -->
+          <div class="theme-selector">
+            <span class="theme-label">Style:</span>
+            <div class="theme-options">
+              <label
+                v-for="theme in themes"
+                :key="theme.id"
+                class="theme-option"
+                :class="{ active: selectedTheme === theme.id }"
+              >
+                <input
+                  type="radio"
+                  :value="theme.id"
+                  v-model="selectedTheme"
+                  class="sr-only"
+                />
+                {{ theme.name }}
+              </label>
+            </div>
           </div>
-        </div>
 
-        <!-- Mode Selector -->
-        <div class="theme-selector">
-          <span class="theme-label">Color mode:</span>
-          <div class="theme-options">
-            <label
-              v-for="mode in modes"
-              :key="mode.id"
-              class="theme-option"
-              :class="{ active: selectedMode === mode.id }"
-            >
-              <input
-                type="radio"
-                :value="mode.id"
-                v-model="selectedMode"
-                class="sr-only"
-              />
-              {{ mode.name }}
-            </label>
+          <!-- Mode Selector -->
+          <div class="theme-selector">
+            <span class="theme-label">Color mode:</span>
+            <div class="theme-options">
+              <label
+                v-for="mode in modes"
+                :key="mode.id"
+                class="theme-option"
+                :class="{ active: selectedMode === mode.id }"
+              >
+                <input
+                  type="radio"
+                  :value="mode.id"
+                  v-model="selectedMode"
+                  class="sr-only"
+                />
+                {{ mode.name }}
+              </label>
+            </div>
           </div>
-        </div>
 
-        <!-- Live Preview -->
-        <div class="widget-preview">
-          <span class="preview-label">Preview:</span>
-          <div class="preview-container" :class="{ 'preview-dark': selectedMode === 'dark' }" v-html="widgetCode"></div>
-        </div>
+          <!-- Live Preview -->
+          <div class="widget-preview">
+            <span class="preview-label">Preview:</span>
+            <div class="preview-container" :class="{ 'preview-dark': selectedMode === 'dark' }" v-html="widgetCode"></div>
+          </div>
 
-        <!-- Code -->
-        <div class="code-block">
-          <span class="code-label">Copy this code to your site:</span>
-          <pre><code>{{ widgetCode }}</code></pre>
-        </div>
+          <!-- Code -->
+          <div class="code-block">
+            <span class="code-label">Copy this code to your site:</span>
+            <pre><code>{{ widgetCode }}</code></pre>
+          </div>
 
-        <button @click="copyWidget" class="btn-outline">
-          {{ copiedWidget ? 'Copied!' : 'Copy code' }}
-        </button>
-      </section>
+          <button @click="copyWidget" class="btn-outline">
+            {{ copiedWidget ? 'Copied!' : 'Copy code' }}
+          </button>
+        </section>
+      </div>
 
-      <!-- Members -->
-      <section class="members">
-        <h2>Members</h2>
-        <ul>
-          <li v-for="p in participants" :key="p.slug">
-            <a :href="p.url" target="_blank" rel="noopener">{{ p.name }}</a>
-            <span class="description">{{ p.description }}</span>
-          </li>
-        </ul>
-      </section>
+      <!-- Right Column -->
+      <div class="column-right">
+        <!-- Call to Action -->
+        <section class="cta-section">
+          <h2>Join the Webring</h2>
+          <p>Have a website? Become part of our community of connected sites.</p>
+          <router-link to="/apply" class="btn-primary">Apply Now</router-link>
+        </section>
 
-      <!-- Navigation (optional) -->
-      <section v-if="SHOW_NAVIGATION" class="nav-section">
-        <h2>Navigate</h2>
-        <select v-model="selectedSlug">
-          <option value="">Select a site...</option>
-          <option v-for="p in participants" :key="p.slug" :value="p.slug">
-            {{ p.name }}
-          </option>
-        </select>
+        <!-- Members -->
+        <section class="members">
+          <h2>Members</h2>
+          <ul>
+            <li v-for="p in participants" :key="p.slug">
+              <a :href="p.url" target="_blank" rel="noopener">{{ p.name }}</a>
+              <span class="description">{{ p.description }}</span>
+            </li>
+          </ul>
+        </section>
 
-        <div class="nav-buttons">
-          <button @click="navigatePrev" :disabled="!selectedSlug">Prev</button>
-          <button @click="navigateRandom" class="btn-secondary">Random</button>
-          <button @click="navigateNext" :disabled="!selectedSlug">Next</button>
-        </div>
-      </section>
-    </template>
+        <!-- Navigation (optional) -->
+        <section v-if="SHOW_NAVIGATION" class="nav-section">
+          <h2>Navigate</h2>
+          <select v-model="selectedSlug">
+            <option value="">Select a site...</option>
+            <option v-for="p in participants" :key="p.slug" :value="p.slug">
+              {{ p.name }}
+            </option>
+          </select>
+
+          <div class="nav-buttons">
+            <button @click="navigatePrev" :disabled="!selectedSlug">Prev</button>
+            <button @click="navigateRandom" class="btn-secondary">Random</button>
+            <button @click="navigateNext" :disabled="!selectedSlug">Next</button>
+          </div>
+        </section>
+      </div>
+    </div>
 
     <footer>
       <router-link to="/admin">Admin</router-link>
@@ -263,27 +283,63 @@ onMounted(fetchParticipants)
 </template>
 
 <style scoped>
-.container {
-  max-width: 560px;
+.page {
+  max-width: 1100px;
   margin: 0 auto;
   padding: 3rem 1.5rem;
 }
 
 header {
   text-align: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 3rem;
+  padding: 2.5rem 2rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+}
+
+.header-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 1.25rem;
+  color: var(--color-primary);
+}
+
+.header-icon svg {
+  width: 100%;
+  height: 100%;
 }
 
 header h1 {
   margin: 0;
-  font-size: 1.5rem;
-  font-weight: 600;
-  letter-spacing: -0.025em;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
 }
 
-header p {
+.tagline {
   margin: 0.5rem 0 0;
-  font-size: 0.875rem;
+  font-size: 1.0625rem;
+  color: var(--color-text-muted);
+}
+
+.header-stats {
+  margin-top: 1.25rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 50px;
   color: var(--color-text-muted);
 }
 
@@ -297,9 +353,29 @@ header p {
   color: var(--color-error);
 }
 
+/* Two Column Layout */
+.two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+}
+
+.column-left,
+.column-right {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .two-column {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Introduction */
 .intro-section {
-  margin-bottom: 2rem;
+  margin-bottom: 0;
 }
 
 .intro-section h2 {
@@ -327,7 +403,6 @@ header p {
   border-radius: 12px;
   padding: 2rem;
   text-align: center;
-  margin-bottom: 2rem;
 }
 
 .cta-section h2 {
@@ -365,7 +440,6 @@ header p {
   border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 1.5rem;
-  margin-bottom: 2rem;
 }
 
 .embed-section h2 {
@@ -515,7 +589,10 @@ header p {
 
 /* Members */
 .members {
-  margin-bottom: 2rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.5rem;
 }
 
 .members h2 {
@@ -571,7 +648,6 @@ header p {
   border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 1.25rem;
-  margin-bottom: 2rem;
 }
 
 .nav-section h2 {
@@ -639,7 +715,7 @@ header p {
 
 /* Footer */
 footer {
-  margin-top: 2rem;
+  margin-top: 3rem;
   padding-top: 1.5rem;
   border-top: 1px solid var(--color-border);
   text-align: center;

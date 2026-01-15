@@ -1,12 +1,6 @@
 {
   "participants": [
     {
-      "slug": "retro-computing",
-      "name": "Retro Computing Blog",
-      "url": "https://retrocomputing.example.com",
-      "description": "A blog about vintage computers and programming"
-    },
-    {
       "slug": "pixel-art",
       "name": "Pixel Art Gallery",
       "url": "https://pixelart.example.com",

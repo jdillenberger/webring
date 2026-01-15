@@ -1,4 +1,4 @@
-.PHONY: install dev dev-backend dev-frontend build deploy setup setup-github clean hash-password help
+.PHONY: install dev dev-backend dev-frontend build deploy setup setup-github clean hash-password help docker-build docker-up docker-down docker-logs
 
 # Default target
 help:
@@ -17,6 +17,12 @@ help:
 	@echo "Production:"
 	@echo "  make build          - Build frontend for production"
 	@echo "  make deploy         - Build and deploy (customize deploy target)"
+	@echo ""
+	@echo "Docker:"
+	@echo "  make docker-build   - Build Docker images"
+	@echo "  make docker-up      - Start containers (detached)"
+	@echo "  make docker-down    - Stop and remove containers"
+	@echo "  make docker-logs    - View container logs"
 	@echo ""
 	@echo "Utilities:"
 	@echo "  make hash-password  - Generate bcrypt hash for admin password"
@@ -122,3 +128,16 @@ clean:
 	rm -rf frontend/node_modules
 	rm -rf backend/node_modules
 	@echo "Done!"
+
+# Docker commands
+docker-build:
+	docker compose build
+
+docker-up:
+	docker compose up -d
+
+docker-down:
+	docker compose down
+
+docker-logs:
+	docker compose logs -f
