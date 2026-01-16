@@ -32,10 +32,22 @@ Visit:
 - **Apply:** http://localhost:5173/apply
 - **Admin:** http://localhost:5173/admin
 
+## Quick Deploy to Hetzner Cloud
+
+Deploy your own webring in minutes. See the [Hetzner Deployment Guide](docs/hetzner-deployment.md) for step-by-step instructions.
+
+```bash
+# On your server:
+git clone https://github.com/YOUR_USERNAME/webring.git /opt/webring
+cd /opt/webring
+./deploy.sh
+```
+
 ## Documentation
 
 | Document | Description |
 |----------|-------------|
+| [Hetzner Deployment](docs/hetzner-deployment.md) | Deploy to Hetzner Cloud (beginner-friendly) |
 | [Installation Guide](docs/installation.md) | How to install and set up the application |
 | [Configuration Guide](docs/configuration.md) | All environment variables and options |
 | [API Reference](docs/api.md) | Complete API endpoint documentation |
@@ -47,18 +59,22 @@ Visit:
 ## Project Structure
 
 ```
-webring2/
-├── backend/           # Express.js API server
-│   ├── routes/        # API endpoints
-│   ├── services/      # GitHub/local storage service
-│   └── middleware/    # Authentication
-├── frontend/          # Vue 3 + Vite application
-│   └── src/views/     # Page components
-├── data/              # Local JSON data storage
-├── docs/              # Documentation
-├── .env               # Configuration (create from example.env)
-├── example.env        # Configuration template
-└── Makefile           # Build automation
+webring/
+├── backend/                  # Express.js API server
+│   ├── routes/               # API endpoints
+│   ├── services/             # GitHub/local storage service
+│   └── middleware/           # Authentication
+├── frontend/                 # Vue 3 + Vite application
+│   └── src/views/            # Page components
+├── data/                     # Local JSON data storage
+├── docs/                     # Documentation
+├── deploy.sh                 # One-command deployment script
+├── docker-compose.yml        # Development Docker setup
+├── docker-compose.prod.yml   # Production Docker setup
+├── Caddyfile.example         # Caddy reverse proxy template
+├── .env                      # Configuration (create from example.env)
+├── example.env               # Configuration template
+└── Makefile                  # Build automation
 ```
 
 ## Data Storage Options

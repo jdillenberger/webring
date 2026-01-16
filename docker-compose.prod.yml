@@ -1,0 +1,69 @@
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - frontend
+      - backend
+
+  backend:
+    build: ./backend
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - PORT=3000
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - GITHUB_OWNER=${GITHUB_OWNER}
+      - GITHUB_REPO=${GITHUB_REPO}
+      - GITHUB_BRANCH=${GITHUB_BRANCH:-main}
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - ADMIN_PASSWORD_HASH=${ADMIN_PASSWORD_HASH}
+      - ADMIN_JWT_SECRET=${ADMIN_JWT_SECRET}
+      - ADMIN_JWT_EXPIRES=${ADMIN_JWT_EXPIRES:-24h}
+      - USE_LOCAL_DATA=${USE_LOCAL_DATA:-true}
+    volumes:
+      - webring_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        - VITE_API_URL=${VITE_API_URL:-https://localhost}
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # Init container to set up data directory with correct permissions
+  init-data:
+    image: alpine:latest
+    volumes:
+      - webring_data:/data
+      - ./data:/source-data:ro
+    command: >
+      sh -c "
+        if [ ! -f /data/participants.json ]; then
+          cp /source-data/participants.json /data/ 2>/dev/null || echo '{\"participants\":[]}' > /data/participants.json;
+        fi &&
+        if [ ! -f /data/applications.json ]; then
+          cp /source-data/applications.json /data/ 2>/dev/null || echo '{\"applications\":[]}' > /data/applications.json;
+        fi &&
+        chown -R 1001:1001 /data &&
+        echo 'Data directory initialized'
+      "
+
+volumes:
+  caddy_data:
+  caddy_config:
+  webring_data:
