@@ -108,7 +108,8 @@ Run this single command on your server:
 
 ```bash
 apt-get update && apt-get install -y git && \
-git clone https://github.com/YOUR_USERNAME/webring.git /opt/webring && \
+git clone --branch development --single-branch https://github.com/jdillenberger/webring.git /opt/webring
+ && \
 cd /opt/webring && \
 ./deploy.sh
 ```
