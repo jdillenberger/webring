@@ -55,24 +55,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/participants/:slug - Get single participant
-router.get('/:slug', async (req, res) => {
-  try {
-    const github = getGitHubService();
-    const participants = await github.getParticipants();
-    const participant = participants.find(p => p.slug === req.params.slug);
-
-    if (!participant) {
-      return res.status(404).json({ error: 'Participant not found' });
-    }
-
-    res.json(participant);
-  } catch (error) {
-    console.error('Error fetching participant:', error);
-    res.status(500).json({ error: 'Failed to fetch participant' });
-  }
-});
-
 // GET /api/next/:slug? - Navigate to next site
 router.get('/next/:slug?', async (req, res) => {
   try {
@@ -198,6 +180,26 @@ router.get('/stats', async (req, res) => {
   } catch (error) {
     console.error('Error fetching stats:', error);
     res.status(500).json({ error: 'Failed to fetch stats' });
+  }
+});
+
+// GET /api/participants/:slug - Get single participant
+// NOTE: This catch-all route must be defined AFTER all named routes
+// (next, prev, random, navigate, stats) to avoid matching their paths as slugs.
+router.get('/:slug', async (req, res) => {
+  try {
+    const github = getGitHubService();
+    const participants = await github.getParticipants();
+    const participant = participants.find(p => p.slug === req.params.slug);
+
+    if (!participant) {
+      return res.status(404).json({ error: 'Participant not found' });
+    }
+
+    res.json(participant);
+  } catch (error) {
+    console.error('Error fetching participant:', error);
+    res.status(500).json({ error: 'Failed to fetch participant' });
   }
 });
 
